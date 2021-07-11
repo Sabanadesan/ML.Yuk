@@ -260,80 +260,43 @@ namespace ML.Yuk
             return scol;
         }
 
-        private void SetCol(string column, NDArray value)
+        private void SetCol(string column, NDArray value, NDArray index = null, string indexName = null)
         {
             int i = FindIndexCol(column);
 
-            SetColByIndex(i, value, column);
+            SetColByIndex(i, value, column, index, indexName);
         }
 
-        private void SetColByIndex(int column, NDArray value, string col = null)
-        {
-            if (column == -1)
-            {
-                if (col == null)
-                {
-                    throw new System.IndexOutOfRangeException();
-                }
-
-                Series s = new Series();
-                s.ColName = col;
-
-                _data.Add(s);
-
-                _columns.Add(col);
-
-                column = _columns.Length - 1;
-            }
-
-            Series t = new Series(value);
-            t.ColName = col;
-
-            _data[column] = t;
-
-            _indexes = NDArray.Unique(_indexes.Concat(t.GetIndex()));
-        }
-
-        private void SetCol(string column, DataFrame value)
+        private void SetCol(string column, DataFrame value, NDArray index = null, string indexName = null)
         {
             int i = FindIndexCol(column);
 
-            SetColByIndex(i, value, column);
+            SetColByIndex(i, value, column, index, indexName);
         }
 
-        private void SetCol(string column, Series value)
+        private void SetCol(string column, Series value, NDArray index = null, string indexName = null)
         {
             int i = FindIndexCol(column);
 
-            SetColByIndex(i, value, column);
+            SetColByIndex(i, value, column, index, indexName);
         }
 
-        private void SetColByIndex(int column, DataFrame value, string col = null)
+        private void SetColByIndex(int column, NDArray value, string col = null, NDArray index = null, string indexName = null)
         {
-            if (column == -1)
-            {
-                if (col == null)
-                {
-                    throw new System.IndexOutOfRangeException();
-                }
+            Series t = new Series(value, col, index, indexName);
 
-                Series s = new Series();
-                s.ColName = col;
+            SetColByIndex(column, t, col, index);
+        }
 
-                _data.Add(s);
-
-                _columns.Add(col);
-
-                column = _columns.Length - 1;
-            }
-
+        private void SetColByIndex(int column, DataFrame value, string col = null, NDArray index = null, string indexName = null)
+        {
             NDArray t = value.GetValue();
-            _data[column] = new Series(t[0], col);
+            Series s = new Series(t[0], col, index, indexName);
 
-            _indexes = NDArray.Unique(_indexes.Concat(value.GetIndex()));
+            SetColByIndex(column, s, col, index);
         }
 
-        private void SetColByIndex(int column, Series value, string col = null)
+        private void SetColByIndex(int column, Series value, string col = null, NDArray index = null, string indexName = null)
         {
             if (column == -1)
             {
@@ -344,6 +307,8 @@ namespace ML.Yuk
 
                 Series s = new Series();
                 s.ColName = col;
+                s.IndexName = indexName;
+                s.SetIndex(index);
 
                 _data.Add(s);
 
@@ -362,11 +327,14 @@ namespace ML.Yuk
             get => GetCol(col);
             set
             {
+                NDArray index = this.GetIndex();
+                string indexName = this.IndexColumn;
+
                 if (value == null)
                 {
                     NDArray vNDArray = new NDArray();
                     vNDArray.Init(value, this.Length);
-                    SetCol(col, vNDArray);
+                    SetCol(col, vNDArray, index, indexName);
                 }
                 else
                 {
@@ -375,23 +343,23 @@ namespace ML.Yuk
                     if (valueType == typeof(NDArray))
                     {
                         NDArray vNDArray = value;
-                        SetCol(col, vNDArray);
+                        SetCol(col, vNDArray, index, indexName);
                     }
                     else if (valueType == typeof(Series))
                     {
                         Series vSeries = value;
-                        SetCol(col, vSeries);
+                        SetCol(col, vSeries, index, indexName);
                     }
                     else if (valueType == typeof(DataFrame))
                     {
                         DataFrame vDataFrame = value;
-                        SetCol(col, vDataFrame);
+                        SetCol(col, vDataFrame, index, indexName);
                     }
                     else
                     {
                         NDArray vNDArray = new NDArray();
                         vNDArray.Init(value, this.Length);
-                        SetCol(col, vNDArray);
+                        SetCol(col, vNDArray, index, indexName);
                     }
                 }
 
@@ -403,11 +371,14 @@ namespace ML.Yuk
             get => GetColByIndex(col);
             set
             {
+                NDArray index = this.GetIndex();
+                string indexName = this.IndexColumn;
+
                 if (value == null)
                 {
                     NDArray vNDArray = new NDArray();
                     vNDArray.Init(value, this.Length);
-                    SetColByIndex(col, vNDArray);
+                    SetColByIndex(col, vNDArray, null, index, indexName);
                 }
                 else
                 {
@@ -416,17 +387,17 @@ namespace ML.Yuk
                     if (valueType == typeof(NDArray))
                     {
                         NDArray vNDArray = value;
-                        SetColByIndex(col, vNDArray);
+                        SetColByIndex(col, vNDArray, null, index, indexName);
                     }
                     else if (valueType == typeof(Series))
                     {
                         Series vSeries = value;
-                        SetColByIndex(col, vSeries);
+                        SetColByIndex(col, vSeries, null, index, indexName);
                     }
                     else if (valueType == typeof(DataFrame))
                     {
                         DataFrame vDataFrame = value;
-                        SetColByIndex(col, vDataFrame);
+                        SetColByIndex(col, vDataFrame, null, index, indexName);
                     }
                 }
             }

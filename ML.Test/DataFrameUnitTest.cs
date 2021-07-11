@@ -550,7 +550,7 @@ namespace ML.Test
 
             DataFrame t = df1["Low"];
 
-            DataFrame a = new DataFrame(new Series(new NDArray(15, 20, 30), "Low"));
+            DataFrame a = new DataFrame(new Series(new NDArray(15, 20, 30), "Low", index, "Date"));
 
             Assert.True(t.Equals(a), "Arrays are not equal.");
         }
