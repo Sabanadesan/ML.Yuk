@@ -807,8 +807,8 @@ namespace ML.Test
 
             t.SetIndex("Date");
 
-            Series col5 = new Series(new NDArray(10, 20, 30), "Column1", index1);
-            Series col6 = new Series(new NDArray(40, 50, 60), "Column2", index2);
+            Series col5 = new Series(new NDArray(10, 20, 30), "Column1", index1, "Date");
+            Series col6 = new Series(new NDArray(40, 50, 60), "Column2", index2, "Date");
 
             DataFrame z = new DataFrame(col5, col6);
 
