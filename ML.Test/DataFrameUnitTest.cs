@@ -323,13 +323,13 @@ namespace ML.Test
 
             fs.Close();
 
-            Series col = new Series(new NDArray(DateTime.Parse("2018-03-12"), DateTime.Parse("2018-03-13"), DateTime.Parse("2018-03-14")), "Date");
-            Series col1 = new Series(new NDArray(1592.599976, 1615.959961, 1597.000000), "Open");
-            Series col2 = new Series(new NDArray(1605.329956, 1617.540039, 1606.439941), "High");
-            Series col3 = new Series(new NDArray(1586.699951, 1578.010010, 1590.890015), "Low");
-            Series col4 = new Series(new NDArray(1598.390015, 1588.180054, 1591.000000), "Close");
-            Series col5 = new Series(new NDArray(1598.390015, 1588.180054, 1591.000000), "Adj Close");
-            Series col6 = new Series(new NDArray(5174200, 6531900, 4175400), "Volume");
+            Series col = new Series(new NDArray(DateTime.Parse("2018-03-12"), DateTime.Parse("2018-03-13"), DateTime.Parse("2018-03-14")), "Date", null, "Date");
+            Series col1 = new Series(new NDArray(1592.599976, 1615.959961, 1597.000000), "Open", null, "Date");
+            Series col2 = new Series(new NDArray(1605.329956, 1617.540039, 1606.439941), "High", null, "Date");
+            Series col3 = new Series(new NDArray(1586.699951, 1578.010010, 1590.890015), "Low", null, "Date");
+            Series col4 = new Series(new NDArray(1598.390015, 1588.180054, 1591.000000), "Close", null, "Date");
+            Series col5 = new Series(new NDArray(1598.390015, 1588.180054, 1591.000000), "Adj Close", null, "Date");
+            Series col6 = new Series(new NDArray(5174200, 6531900, 4175400), "Volume", null, "Date");
 
             DataFrame df1 = new DataFrame(col, col1, col2, col3, col4, col5, col6);
 
@@ -345,13 +345,13 @@ namespace ML.Test
 
             DataFrame df = DataFrame.LoadCsv(filePath, ',', true, null, data);
 
-            Series col = new Series(new NDArray(DateTime.Parse("2018-03-12"), DateTime.Parse("2018-03-13"), DateTime.Parse("2018-03-14")), "Date");
-            Series col1 = new Series(new NDArray(1592.599976, 1615.959961, 1597.000000), "Open");
-            Series col2 = new Series(new NDArray(1605.329956, 1617.540039, 1606.439941), "High");
-            Series col3 = new Series(new NDArray(1586.699951, 1578.010010, 1590.890015), "Low");
-            Series col4 = new Series(new NDArray(1598.390015, 1588.180054, 1591.000000), "Close");
-            Series col5 = new Series(new NDArray(1598.390015, 1588.180054, 1591.000000), "Adj Close");
-            Series col6 = new Series(new NDArray(5174200, 6531900, 4175400), "Volume");
+            Series col = new Series(new NDArray(DateTime.Parse("2018-03-12"), DateTime.Parse("2018-03-13"), DateTime.Parse("2018-03-14")), "Date", null, "Date");
+            Series col1 = new Series(new NDArray(1592.599976, 1615.959961, 1597.000000), "Open", null, "Date");
+            Series col2 = new Series(new NDArray(1605.329956, 1617.540039, 1606.439941), "High", null, "Date");
+            Series col3 = new Series(new NDArray(1586.699951, 1578.010010, 1590.890015), "Low", null, "Date");
+            Series col4 = new Series(new NDArray(1598.390015, 1588.180054, 1591.000000), "Close", null, "Date");
+            Series col5 = new Series(new NDArray(1598.390015, 1588.180054, 1591.000000), "Adj Close", null, "Date");
+            Series col6 = new Series(new NDArray(5174200, 6531900, 4175400), "Volume", null, "Date");
 
             DataFrame df1 = new DataFrame(col, col1, col2, col3, col4, col5, col6);
 

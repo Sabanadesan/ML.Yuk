@@ -906,10 +906,10 @@ namespace ML.Yuk
 
             DataFrame df;
 
+            string indexColumn = null;
+
             if (addIndexColumn)
             {
-                string indexColumn = null;
-
                 if (columnNames != null)
                 {
                     indexColumn = columnNames[0];
@@ -926,10 +926,16 @@ namespace ML.Yuk
                 df = new DataFrame();
             }
 
+            if (lines.Length > 0 && indexColumn == null)
+            {
+                NDArray headerArray = GetLine(lines[0], false);
+                indexColumn = headerArray[0];
+            }
+
             for (int i = 0; i < lines.Length - 1; i++)
             {
                 array = GetLine(lines[i], addIndexColumn);
-                
+
                 if (array.Length > 0)
                 {
                     if (header == true && i == 0)
@@ -943,7 +949,7 @@ namespace ML.Yuk
                             indexVal = GetLineIndex(lines[i], type);
                         }
 
-                        df.Add(array, indexVal, cols, dataTypes);
+                        df.Add(array, indexVal, cols, dataTypes, indexColumn);
                     }
                 }
             }
