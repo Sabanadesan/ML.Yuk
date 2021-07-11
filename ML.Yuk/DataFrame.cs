@@ -144,6 +144,7 @@ namespace ML.Yuk
                 NDArray index = Map(_indexes, col_index, new_index);
 
                 scol.SetIndex(index);
+                scol.IndexName = column;
             }
 
             _indexes = new_index;
@@ -275,7 +276,10 @@ namespace ML.Yuk
                     throw new System.IndexOutOfRangeException();
                 }
 
-                _data.Add(new Series());
+                Series s = new Series();
+                s.ColName = col;
+
+                _data.Add(s);
 
                 _columns.Add(col);
 
@@ -283,6 +287,7 @@ namespace ML.Yuk
             }
 
             Series t = new Series(value);
+            t.ColName = col;
 
             _data[column] = t;
 
@@ -312,7 +317,10 @@ namespace ML.Yuk
                     throw new System.IndexOutOfRangeException();
                 }
 
-                _data.Add(new Series());
+                Series s = new Series();
+                s.ColName = col;
+
+                _data.Add(s);
 
                 _columns.Add(col);
 
@@ -320,7 +328,7 @@ namespace ML.Yuk
             }
 
             NDArray t = value.GetValue();
-            _data[column] = new Series(t[0]);
+            _data[column] = new Series(t[0], col);
 
             _indexes = NDArray.Unique(_indexes.Concat(value.GetIndex()));
         }
@@ -334,7 +342,10 @@ namespace ML.Yuk
                     throw new System.IndexOutOfRangeException();
                 }
 
-                _data.Add(new Series());
+                Series s = new Series();
+                s.ColName = col;
+
+                _data.Add(s);
 
                 _columns.Add(col);
 
@@ -618,9 +629,9 @@ namespace ML.Yuk
             return _data.Equals(obj._data) && _columns.Equals(obj._columns) && _indexes.Equals(obj._indexes);
         }
 
-        public void Add(NDArray data, NDArray index = null, NDArray columns = null, NDArray dataTypes = null)
+        public void Add(NDArray data, NDArray index = null, NDArray columns = null, NDArray dataTypes = null, string indexName = null)
         {
-            AddFind(data, true, 0, 0, index, columns, dataTypes);
+            AddFind(data, true, 0, 0, index, columns, dataTypes, indexName);
         }
 
         private bool isString(dynamic array)
@@ -650,7 +661,7 @@ namespace ML.Yuk
             return false;
         }
 
-        private void AddFind(dynamic array, bool isRow, int row, int col, NDArray index = null, NDArray columns = null, NDArray dataTypes = null)
+        private void AddFind(dynamic array, bool isRow, int row, int col, NDArray index = null, NDArray columns = null, NDArray dataTypes = null, string indexName = null)
         {
             int max = 0;
 
@@ -665,22 +676,22 @@ namespace ML.Yuk
                 {
                     if (isRow)
                     {
-                        AddFind(array[i], false, row, i, index, columns, dataTypes);
+                        AddFind(array[i], false, row, i, index, columns, dataTypes, indexName);
                     }
                     else
                     {
-                        AddFind(array[i], true, i, col, index, columns, dataTypes);
+                        AddFind(array[i], true, i, col, index, columns, dataTypes, indexName);
                     }
                 }
             }
 
             if (!isArray(array))
             {
-                AddToDataFrame(row, col, array, index, columns, dataTypes);
+                AddToDataFrame(row, col, array, index, columns, dataTypes, indexName);
             }
         }
 
-        private void AddToDataFrame(int row, int col, dynamic value, NDArray index = null, NDArray columns = null, NDArray dataTypes = null)
+        private void AddToDataFrame(int row, int col, dynamic value, NDArray index = null, NDArray columns = null, NDArray dataTypes = null, string indexName = null)
         {
             int i = -1;
 
@@ -698,6 +709,9 @@ namespace ML.Yuk
             if (i == -1)
             {
                 Series s = new Series();
+                s.ColName = lbl_col;
+                s.IndexName = indexName;
+
                 _data.Add(s);
                 _columns.Add(lbl_col);
                 i = FindIndexCol(lbl_col);
@@ -1184,7 +1198,8 @@ namespace ML.Yuk
                     t1.Add(c(a[j, i], b[j, i])); 
                 }
 
-                t1.ColName = a.Columns[i];
+                t1.ColName = t.ColName;
+                t1.IndexName = t.IndexName;
 
                 z.AddColumn(t1);
             }
@@ -1207,7 +1222,8 @@ namespace ML.Yuk
                     t1.Add(c(a[j, i], b));
                 }
 
-                t1.ColName = a.Columns[i];
+                t1.ColName = t.ColName;
+                t1.IndexName = t.IndexName;
 
                 z.AddColumn(t1);
             }
@@ -1244,7 +1260,8 @@ namespace ML.Yuk
                     }
                 }
 
-                t1.ColName = a.Columns[i];
+                t1.ColName = t.ColName;
+                t1.IndexName = t.IndexName;
 
                 z.AddColumn(t1);
             }
@@ -1268,7 +1285,8 @@ namespace ML.Yuk
                     t1.Add(total);
                 }
 
-                t1.ColName = a.Columns[i];
+                t1.ColName = t.ColName;
+                t1.IndexName = t.IndexName;
 
                 z.AddColumn(t1);
             }

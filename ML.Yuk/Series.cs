@@ -151,7 +151,43 @@ namespace ML.Yuk
 
         public bool Equals(Series obj)
         {
-            return _array.Equals(obj._array) && _index.Equals(obj._index) && _colName.Equals(obj._colName) && _indexName.Equals(obj._indexName);
+            bool valid = true;
+
+            if (!_array.Equals(obj._array))
+            {
+                valid = false;
+            }
+
+            if (!_index.Equals(obj._index))
+            {
+                valid = false;
+            }
+
+            if (_colName == null && obj._colName == null)
+            {
+
+            }
+            else
+            {
+                if (!_colName.Equals(obj._colName))
+                {
+                    valid = false;
+                }
+            }
+
+            if (_indexName == null && obj._indexName == null)
+            {
+
+            }
+            else
+            {
+                if (!_indexName.Equals(obj._indexName))
+                {
+                    valid = false;
+                }
+            }
+
+            return valid;
         }
 
         public int Length

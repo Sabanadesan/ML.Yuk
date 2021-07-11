@@ -550,7 +550,7 @@ namespace ML.Test
 
             DataFrame t = df1["Low"];
 
-            DataFrame a = new DataFrame(new Series(new NDArray(15, 20, 30)));
+            DataFrame a = new DataFrame(new Series(new NDArray(15, 20, 30), "Low"));
 
             Assert.True(t.Equals(a), "Arrays are not equal.");
         }
@@ -838,7 +838,7 @@ namespace ML.Test
 
             DataFrame df1 = new DataFrame(col1, col2);
 
-            df1["Column3"] = new Series(new NDArray(70, 80, 90));
+            df1["Column3"] = new Series(new NDArray(70, 80, 90), "Column3");
 
             Series col5 = new Series(new NDArray(10, 20, 30), "Column1");
             Series col6 = new Series(new NDArray(40, 50, 60), "Column2");
@@ -915,7 +915,7 @@ namespace ML.Test
 
             DataFrame df1 = new DataFrame(col1, col2);
 
-            df1[1] = new Series(new NDArray(70, 80, 90));
+            df1[1] = new Series(new NDArray(70, 80, 90), "Column2");
 
             Series col5 = new Series(new NDArray(10, 20, 30), "Column1");
             Series col6 = new Series(new NDArray(70, 80, 90), "Column2");
