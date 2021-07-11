@@ -968,6 +968,29 @@ namespace ML.Test
         }
 
         [Fact]
+        public void TestSetNull()
+        {
+            NDArray index = new NDArray(DateTime.Parse("2018-03-12"), DateTime.Parse("2018-03-13"), DateTime.Parse("2018-03-14"));
+            Series col1 = new Series(new NDArray(1, 2, 3), "Column1", index, "Date");
+            Series col2 = new Series(new NDArray(4, 5, 6), "Column2", index, "Date");
+
+            DataFrame df = new DataFrame(col1, col2);
+
+            df["Column3"] = null;
+            df["Column4"] = null;
+
+            Series cola = new Series(new NDArray(1, 2, 3), "Column1", index, "Date");
+            Series colb = new Series(new NDArray(4, 5, 6), "Column2", index, "Date");
+            Series colc = new Series(new NDArray(null, null, null), "Column3", index, "Date");
+            Series cold = new Series(new NDArray(null, null, null), "Column4", index, "Date");
+
+            DataFrame df1 = new DataFrame(cola, colb, colc, cold);
+
+
+            Assert.True(df.Equals(df1), "Arrays are not equal.");
+        }
+
+        [Fact]
         public void TestGetRows()
         {
             Series col1 = new Series(new NDArray(1, 2, 3), "Column1");
