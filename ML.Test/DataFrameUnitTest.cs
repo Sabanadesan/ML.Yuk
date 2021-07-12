@@ -1014,5 +1014,61 @@ namespace ML.Test
                
             Assert.True(i.Equals(df1), "Arrays are not equal.");
         }
+
+        [Fact]
+        public void WriteCsv()
+        {
+            String filePath = GetPath("AMZN2", "csv");
+
+            NDArray data = new NDArray(typeof(DateTime), typeof(double), typeof(double), typeof(double), typeof(double), typeof(double), typeof(int));
+
+            Series col = new Series(new NDArray(DateTime.Parse("2018-03-12"), DateTime.Parse("2018-03-13"), DateTime.Parse("2018-03-14")), "Date", null, "Date");
+            Series col1 = new Series(new NDArray(1592.599976, 1615.959961, 1597.000000), "Open", null, "Date");
+            Series col2 = new Series(new NDArray(1605.329956, 1617.540039, 1606.439941), "High", null, "Date");
+            Series col3 = new Series(new NDArray(1586.699951, 1578.010010, 1590.890015), "Low", null, "Date");
+            Series col4 = new Series(new NDArray(1598.390015, 1588.180054, 1591.000000), "Close", null, "Date");
+            Series col5 = new Series(new NDArray(1598.390015, 1588.180054, 1591.000000), "Adj Close", null, "Date");
+            Series col6 = new Series(new NDArray(5174200, 6531900, 4175400), "Volume", null, "Date");
+
+            DataFrame df = new DataFrame(col, col1, col2, col3, col4, col5, col6);
+
+            df.SetIndex("Date");
+
+            df.WriteCsv(filePath);
+
+            FileStream fs = File.OpenRead(filePath);
+
+            DataFrame df1 = DataFrame.LoadCsv(fs, ',', true, null, data, true);
+
+            fs.Close();
+
+            Assert.True(df.Equals(df1), "Arrays are not equal.");
+        }
+
+        [Fact]
+        public void WriteCsvHeader()
+        {
+            String filePath = GetPath("AMZN3", "csv");
+
+            NDArray data = new NDArray(typeof(DateTime), typeof(double), typeof(double));
+
+            Series col = new Series(new NDArray(DateTime.Parse("2018-03-12"), DateTime.Parse("2018-03-13"), DateTime.Parse("2018-03-14")), "Date", null, "Date");
+            Series col1 = new Series(new NDArray(1592.599976, 1615.959961, 1597.000000), "Open", null, "Date");
+            Series col2 = new Series(new NDArray(1605.329956, 1617.540039, 1606.439941), "High", null, "Date");
+
+            DataFrame df = new DataFrame(col, col1, col2);
+
+            df.SetIndex("Date");
+
+            df.WriteCsv(filePath, ',', true, new NDArray("Date", "Open", "High"));
+
+            FileStream fs = File.OpenRead(filePath);
+
+            DataFrame df1 = DataFrame.LoadCsv(fs, ',', true, null, data, true);
+
+            fs.Close();
+
+            Assert.True(df.Equals(df1), "Arrays are not equal.");
+        }
     }      
 }
