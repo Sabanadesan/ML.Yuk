@@ -1060,7 +1060,7 @@ namespace ML.Test
 
             df.SetIndex("Date");
 
-            df.WriteCsv(filePath, ',', true, new NDArray("Date", "Open", "High"));
+            df.WriteCsv(filePath, ',', true, new NDArray("Open", "High"));
 
             FileStream fs = File.OpenRead(filePath);
 
