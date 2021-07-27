@@ -499,6 +499,56 @@ namespace ML.Yuk
             return sum;
         }
 
+        public static double Max(NDArray array)
+        {
+            double? j = Double.NegativeInfinity;
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                double? t = array[i];
+
+                if ( t >= j)
+                {
+                    j = t;
+                }
+            }
+
+            return j.Value;
+        }
+
+        public static double Min(NDArray array)
+        {
+            double? j = Double.PositiveInfinity;
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                double? t = array[i];
+
+                if (t <= j)
+                {
+                    j = t;
+                }
+            }
+
+            return j.Value;
+        }
+
+        public NDArray Maxlextrema(int window)
+        {
+            NDArray t = new NDArray();
+
+
+            return t;
+        }
+
+        public NDArray Minlextrema(int window)
+        {
+            NDArray t = new NDArray();
+
+
+            return t;
+        }
+
         public Window Rolling(int window)
         {
             NDArray array = Copy();

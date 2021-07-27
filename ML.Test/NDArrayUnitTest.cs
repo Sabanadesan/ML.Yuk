@@ -576,5 +576,49 @@ namespace ML.Test
             Assert.True(o.Equals(nd2), "Arrays are not equal.");
         }
 
+        [Fact]
+        public void TestMin()
+        {
+            NDArray nd = new NDArray(null, 8, 2, -10, 4, -6);
+
+            double i = NDArray.Min(nd);
+
+            Assert.True(i.Equals(-10), "Arrays are not equal.");
+        }
+
+        [Fact]
+        public void TestMax()
+        {
+            NDArray nd = new NDArray(null, 8, 2, -10, 4, -6);
+
+            double i = NDArray.Max(nd);
+
+            Assert.True(i.Equals(8), "Arrays are not equal.");
+        }
+
+        [Fact]
+        public void TestLocalMax()
+        {
+            NDArray nd = new NDArray(null, 8, 2, -10, 4, -6);
+
+            NDArray o = nd.Maxlextrema(2);
+
+            NDArray nd2 = new NDArray(null, 8, null, null, 4, null);
+
+            Assert.True(o.Equals(nd2), "Arrays are not equal.");
+        }
+
+        [Fact]
+        public void TestLocalMin()
+        {
+            NDArray nd = new NDArray(null, 8, 2, -10, 4, -6);
+
+            NDArray o = nd.Minlextrema(2);
+
+            NDArray nd2 = new NDArray(null, null, null, -10, null, null);
+
+            Assert.True(o.Equals(nd2), "Arrays are not equal.");
+        }
+
     }
 }
