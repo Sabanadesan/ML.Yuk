@@ -491,5 +491,90 @@ namespace ML.Test
 
             Assert.True(i.Equals(3), "Arrays are not equal.");
         }
+
+        [Fact]
+        public void TestRolling2()
+        {
+            NDArray nd = new NDArray(1, 2, 3, 4, 5, 6);
+
+            Window w1 = nd.Rolling(2);
+
+            NDArray nd2 = new NDArray(null, new NDArray(1, 2), new NDArray(2, 3), new NDArray(3, 4), new NDArray(4, 5), new NDArray(5, 6));
+
+            Window w2 = new Window(nd2);
+
+            Assert.True(w1.Equals(w2), "Arrays are not equal.");
+        }
+
+        [Fact]
+        public void TestRolling3()
+        {
+            NDArray nd = new NDArray(1, 2, 3, 4, 5, 6);
+
+            Window w1 = nd.Rolling(3);
+
+            NDArray nd2 = new NDArray(null, null, new NDArray(1, 2, 3), new NDArray(2, 3, 4), new NDArray(3, 4, 5), new NDArray(4, 5, 6));
+
+            Window w2 = new Window(nd2);
+
+            Assert.True(w1.Equals(w2), "Arrays are not equal.");
+        }
+
+        [Fact]
+        public void TestRollingSum2()
+        {
+            NDArray nd = new NDArray(1, 2, 3, 4, 5, 6);
+
+            Window w1 = nd.Rolling(2);
+
+            NDArray o = w1.Sum();
+
+            NDArray nd2 = new NDArray(null, 3, 5, 7, 9, 11);
+
+            Assert.True(o.Equals(nd2), "Arrays are not equal.");
+        }
+
+        [Fact]
+        public void TestRollingSum3()
+        {
+            NDArray nd = new NDArray(1, 2, 3, 4, 5, 6);
+
+            Window w1 = nd.Rolling(3);
+
+            NDArray o = w1.Sum();
+
+            NDArray nd2 = new NDArray(null, null, 6, 9, 12, 15);
+
+            Assert.True(o.Equals(nd2), "Arrays are not equal.");
+        }
+
+        [Fact]
+        public void TestRollingMean2()
+        {
+            NDArray nd = new NDArray(1, 2, 3, 4, 5, 6);
+
+            Window w1 = nd.Rolling(2);
+
+            NDArray o = w1.Mean();
+
+            NDArray nd2 = new NDArray(null, 1.5, 2.5, 3.5, 4.5, 5.5);
+
+            Assert.True(o.Equals(nd2), "Arrays are not equal.");
+        }
+
+        [Fact]
+        public void TestRollingMean3()
+        {
+            NDArray nd = new NDArray(1, 2, 3, 4, 5, 6);
+
+            Window w1 = nd.Rolling(3);
+
+            NDArray o = w1.Mean();
+
+            NDArray nd2 = new NDArray(null, null, 2, 3, 4, 5);
+
+            Assert.True(o.Equals(nd2), "Arrays are not equal.");
+        }
+
     }
 }

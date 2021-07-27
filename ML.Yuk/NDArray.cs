@@ -482,6 +482,49 @@ namespace ML.Yuk
             return mean;
         }
 
+        public static double Sum(NDArray array)
+        {
+            double sum = 0;
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                double? t = array[i];
+
+                if (t != null)
+                {
+                    sum = sum + t.Value;
+                }
+            }
+
+            return sum;
+        }
+
+        public Window Rolling(int window)
+        {
+            NDArray array = Copy();
+            int max = array.Length;
+            NDArray narray = new NDArray();
+
+            for (int i = 0; i < max; i++)
+            {
+                if (i >= window - 1)
+                {
+                    Slice s = new Slice(i - window + 1, i + 1);
+                    NDArray t = array[s];
+
+                    narray.Add(t);
+                }
+                else
+                {
+                    narray.Add(null);
+                }
+            }
+
+            Window win = new Window(narray);
+
+            return win;
+        }
+
         /*
         public void Zeros()
         {
