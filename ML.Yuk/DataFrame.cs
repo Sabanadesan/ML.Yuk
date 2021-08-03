@@ -1364,5 +1364,10 @@ namespace ML.Yuk
 
             return i;
         }
+
+        public DataFrame Append(DataFrame value)
+        {
+            return value;
+        }
     }
 }

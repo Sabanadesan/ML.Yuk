@@ -1070,5 +1070,28 @@ namespace ML.Test
 
             Assert.True(df.Equals(df1), "Arrays are not equal.");
         }
+
+        [Fact]
+        public void AppendDataFrame1()
+        {
+            Series col1 = new Series(new NDArray(1, 2, 3), "Column1");
+            Series col2 = new Series(new NDArray(4, 5, 6), "Column2");
+
+            DataFrame df = new DataFrame(col1, col2);
+
+            Series col3 = new Series(new NDArray(1, 2, 3), "Column1");
+            Series col4 = new Series(new NDArray(4, 5, 6, 7, 8, 9), "Column2");
+
+            DataFrame df1 = new DataFrame(col3, col4);
+
+            DataFrame df2 = df1.Append(df);
+
+            Series col5 = new Series(new NDArray(1, 2, 3), "Column1");
+            Series col6 = new Series(new NDArray(4, 5, 6, 7, 8, 9), "Column2");
+
+            DataFrame z = new DataFrame(col5, col6);
+
+            Assert.True(df2.Equals(z), "Arrays are not equal.");
+        }
     }      
 }

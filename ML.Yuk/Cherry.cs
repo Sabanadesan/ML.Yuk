@@ -4,7 +4,11 @@ using System.Text;
 
 namespace ML.Yuk
 {
-    class Pickle
+    public class Cherry
     {
+        public Cherry()
+        {
+            // file.chy
+        }
     }
 }
