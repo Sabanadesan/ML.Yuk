@@ -60,7 +60,7 @@ namespace ML.Yuk
         private NDArray _data;
         private NDArray _indexes;
         private NDArray _columns;
-        private string _indexColumn;
+        private string _indexName;
 
         public DataFrame(string indexColumn = null)
         {
@@ -78,26 +78,26 @@ namespace ML.Yuk
             return new DataFrameEnum(this);
         }
 
-        public void InitDataFrame(string indexColumn = null)
+        public void InitDataFrame(string indexName = null)
         {
             _data = new NDArray();
             _indexes = new NDArray();
             _columns = new NDArray();
-            _indexColumn = indexColumn;
+            _indexName = indexName;
         }
 
-        public DataFrame(NDArray data, NDArray index, NDArray columns, string indexColumn)
+        public DataFrame(NDArray data, NDArray index, NDArray columns, string indexName)
         {
             _data = data;
             _indexes = index;
             _columns = columns;
-            _indexColumn = indexColumn;
+            _indexName = indexName;
         }
 
-        public string IndexColumn
+        public string IndexName
         {
-            get { return _indexColumn; }
-            set { _indexColumn = value; }
+            get { return _indexName; }
+            set { _indexName = value; }
         }
 
         public NDArray GetIndex()
@@ -120,7 +120,7 @@ namespace ML.Yuk
 
                 _indexes = NDArray.Unique(_indexes.Concat(s.GetIndex()));
 
-                this.IndexColumn = s.IndexName;
+                IndexName = s.IndexName;
             }
         }
 
@@ -190,7 +190,7 @@ namespace ML.Yuk
             //To Do: Get all indexes and unique
             _indexes = NDArray.Unique(_indexes.Concat(s.GetIndex()));
 
-            this.IndexColumn = s.IndexName;
+            IndexName = s.IndexName;
         }
 
         public DataFrame GetRowVal(int row)
@@ -328,7 +328,7 @@ namespace ML.Yuk
             set
             {
                 NDArray index = this.GetIndex();
-                string indexName = this.IndexColumn;
+                string indexName = IndexName;
 
                 if (value == null)
                 {
@@ -372,7 +372,7 @@ namespace ML.Yuk
             set
             {
                 NDArray index = this.GetIndex();
-                string indexName = this.IndexColumn;
+                string indexName = IndexName;
 
                 if (value == null)
                 {
@@ -877,30 +877,30 @@ namespace ML.Yuk
 
             DataFrame df;
 
-            string indexColumn = null;
+            string indexName = null;
 
             if (addIndexColumn)
             {
                 if (columnNames != null)
                 {
-                    indexColumn = columnNames[0];
+                    indexName = columnNames[0];
                 }
 
                 type = dataTypes[0];
 
                 dataTypes = RemoveIndexFromDataType(dataTypes);
 
-                df = new DataFrame(indexColumn);
+                df = new DataFrame(indexName);
             }
             else
             {
                 df = new DataFrame();
             }
 
-            if (lines.Length > 0 && indexColumn == null)
+            if (lines.Length > 0 && indexName == null)
             {
                 NDArray headerArray = GetLine(lines[0], false);
-                indexColumn = headerArray[0];
+                indexName = headerArray[0];
             }
 
             for (int i = 0; i < lines.Length - 1; i++)
@@ -920,7 +920,7 @@ namespace ML.Yuk
                             indexVal = GetLineIndex(lines[i], type);
                         }
 
-                        df.Add(array, indexVal, cols, dataTypes, indexColumn);
+                        df.Add(array, indexVal, cols, dataTypes, indexName);
                     }
                 }
             }
@@ -943,7 +943,7 @@ namespace ML.Yuk
             if (header)
             {
                 // If you want headers for your file
-                var strheader = string.Format("\"{0}\"{1}", this.IndexColumn, separator);
+                var strheader = string.Format("\"{0}\"{1}", IndexName, separator);
 
                 foreach (dynamic col in columnNames)
                 {
@@ -1365,9 +1365,72 @@ namespace ML.Yuk
             return i;
         }
 
+        // To Do: Deep Copy
+        public DataFrame Copy()
+        {
+            NDArray data = this._data.Copy();
+            NDArray index = this._indexes.Copy();
+            NDArray columns = this._columns.Copy();
+
+            DataFrame df = new DataFrame(data, index, columns, IndexName);
+
+            return df;
+        }
+
         public DataFrame Append(DataFrame value)
         {
-            return value;
+            DataFrame df = this.Copy();
+            NDArray data = new NDArray();
+            NDArray cols = new NDArray();
+            NDArray inx = new NDArray();
+
+            for (int i = 0; i < value.Columns.Length; i++)
+            {
+                NDArray d = new NDArray();
+
+                Series z = value._data[i];
+                dynamic c = value._columns[i];
+                dynamic iz = value._indexes[i];
+
+                if (!this._columns.Contains(c))
+                {
+                    d.Add(z);
+                    cols.Add(c);
+
+                    if (!_indexes.Contains(iz))
+                    {
+                        inx.Add(iz);
+                    }
+                    
+                }
+                else
+                {
+                    int j = _columns.FindIndex(c);
+
+                    Series t = _data[j];
+                    dynamic ct = _columns[j];
+                    dynamic it = _indexes[j];
+
+                    if (!_indexes.Contains(iz))
+                    {
+                        if (t.FindIndex(iz) != -1)
+                        {
+                            d.Add(t);
+                        }
+
+                        inx.Add(iz);
+                    }
+                }
+
+                if (d.Length > 0)
+                {
+                    data.Add(d);
+                }
+            }
+
+            df.Add(data, inx, cols, null, IndexName);
+
+            return df;
         }
     }
 }

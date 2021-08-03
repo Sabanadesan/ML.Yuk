@@ -1,10 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Collections;
 
 namespace ML.Yuk
 {
-    public class Series
+    public class SeriesEnum : IEnumerator
+    {
+        public Series _rows;
+
+        // Enumerators are positioned before the first element
+        // until the first MoveNext() call.
+        int position = -1;
+
+        public SeriesEnum(Series list)
+        {
+            _rows = list;
+        }
+
+        public bool MoveNext()
+        {
+            position++;
+            return (position < _rows.Length);
+        }
+
+        public void Reset()
+        {
+            position = -1;
+        }
+
+        object IEnumerator.Current
+        {
+            get
+            {
+                return Current;
+            }
+        }
+
+        public dynamic Current
+        {
+            get
+            {
+                try
+                {
+                    return _rows[position];
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+        }
+    }
+
+    public class Series : IEnumerable
     {
         NDArray _array;
         NDArray _index;
@@ -34,6 +83,18 @@ namespace ML.Yuk
             _colName = colName;
             _indexName = indexName;
         }
+
+        // Implementation for the GetEnumerator method.
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return (IEnumerator)GetEnumerator();
+        }
+
+        public SeriesEnum GetEnumerator()
+        {
+            return new SeriesEnum(this);
+        }
+
 
         public T[] AsType<T>()
         {
@@ -204,6 +265,35 @@ namespace ML.Yuk
 
             _index.Add(index);
             _array.Add(item);
+        }
+
+        public Series Append(Series value)
+        {
+            Series s = this.Copy();
+            for(int i = 0; i < value.Length; i++)
+            {
+                dynamic t = value[i];
+                dynamic ix = value._index[i];
+
+                dynamic ix2 = FindIndex(ix);
+
+                if (ix2 == -1) {
+                    s.Add(t, ix);
+                }
+            }
+
+            return s;
+        }
+
+        // To Do: Deep Copy
+        public Series Copy()
+        {
+            NDArray array = _array.Copy();
+            NDArray index = _index.Copy();
+
+            Series s = new Series(array, ColName, index, IndexName);
+
+            return s;
         }
 
         public dynamic Max()

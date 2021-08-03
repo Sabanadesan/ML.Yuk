@@ -549,6 +549,20 @@ namespace ML.Yuk
             return t;
         }
 
+        public int FindIndex(dynamic value)
+        {
+            for (int i = 0; i < _array.Length; i++)
+            {
+                dynamic t = _array[i];
+                if (value.Equals(t))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
         public Window Rolling(int window)
         {
             NDArray array = Copy();
@@ -573,6 +587,21 @@ namespace ML.Yuk
             Window win = new Window(narray);
 
             return win;
+        }
+
+        public bool Contains(dynamic value)
+        {
+            bool valid = false;
+
+            foreach(dynamic t in _array)
+            {
+                if (t == value)
+                {
+                    valid = true;
+                }
+            }
+
+            return valid;
         }
 
         /*

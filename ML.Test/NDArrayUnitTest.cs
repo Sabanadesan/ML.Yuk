@@ -577,6 +577,42 @@ namespace ML.Test
         }
 
         [Fact]
+        public void TestContains1()
+        {
+            NDArray nd = new NDArray(1, 2, 3, 4, 5, 6);
+
+            Assert.True(nd.Contains(5), "Arrays are not equal.");
+        }
+
+        [Fact]
+        public void TestContains2()
+        {
+            NDArray nd = new NDArray(1, 2, 3, 4, 5, 6);
+
+            Assert.False(nd.Contains(9), "Arrays are not equal.");
+        }
+
+        [Fact]
+        public void TestFindIndex1()
+        {
+            NDArray nd = new NDArray(1, 2, 3, 4, 5, 6);
+
+            int i = nd.FindIndex(3);
+
+            Assert.True(nd.Contains(5), "Arrays are not equal.");
+        }
+
+        [Fact]
+        public void TestFindIndex2()
+        {
+            NDArray nd = new NDArray(1, 2, 3, 4, 5, 6);
+
+            int i = nd.FindIndex(8);
+
+            Assert.True(i.Equals(-1), "Arrays are not equal.");
+        }
+
+        [Fact]
         public void TestMin()
         {
             NDArray nd = new NDArray(null, 8, 2, -10, 4, -6);

@@ -144,5 +144,47 @@ namespace ML.Test
 
             Assert.True(Enumerable.SequenceEqual(i, t), "Arrays are not equal.");
         }
+
+        [Fact]
+        public void AppendSeries1()
+        {
+            Series col1 = new Series(new NDArray(4, 5, 6), "Column1");
+
+            Series col2 = new Series(new NDArray(4, 5, 6, 7, 8, 9), "Column1");
+
+            Series s = col1.Append(col2);
+
+            Series col3 = new Series(new NDArray(4, 5, 6, 7, 8, 9), "Column1");
+
+            Assert.True(s.Equals(col3), "Arrays are not equal.");
+        }
+
+        [Fact]
+        public void AppendSeries2()
+        {
+            Series col1 = new Series(new NDArray(4, 5, 6), "Column1");
+
+            Series col2 = new Series(new NDArray(7, 8, 9), "Column1");
+
+            Series s = col1.Append(col2);
+
+            Series col3 = new Series(new NDArray(4, 5, 6), "Column1");
+
+            Assert.True(s.Equals(col3), "Arrays are not equal.");
+        }
+
+        [Fact]
+        public void AppendSeries3()
+        {
+            Series col1 = new Series(new NDArray(4, 5, 6), "Column1");
+
+            Series col2 = new Series(new NDArray(7, 8, 9), "Column1", new NDArray(3, 4, 5));
+
+            Series s = col1.Append(col2);
+
+            Series col3 = new Series(new NDArray(4, 5, 6, 7, 8, 9), "Column1");
+
+            Assert.True(s.Equals(col3), "Arrays are not equal.");
+        }
     }
 }
