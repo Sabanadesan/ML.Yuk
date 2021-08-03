@@ -724,7 +724,10 @@ namespace ML.Yuk
                     
                 if (col == 0)
                 {
-                    _indexes.Add(lbl_index);
+                    if (!_indexes.Contains(lbl_index))
+                    {
+                        _indexes.Add(lbl_index);
+                    }
                 }
 
                 j = FindIndexRow(lbl_index);
@@ -1386,45 +1389,43 @@ namespace ML.Yuk
 
             for (int i = 0; i < value.Columns.Length; i++)
             {
-                NDArray d = new NDArray();
-
                 Series z = value._data[i];
+                NDArray iz = z.GetIndex();
                 dynamic c = value._columns[i];
-                dynamic iz = value._indexes[i];
 
                 if (!this._columns.Contains(c))
                 {
-                    d.Add(z);
-                    cols.Add(c);
+                    data.Add(z.GetValue());
 
-                    if (!_indexes.Contains(iz))
-                    {
-                        inx.Add(iz);
-                    }
-                    
+                    cols.Add(c);
+                    inx = inx.Append(iz);
                 }
                 else
                 {
-                    int j = _columns.FindIndex(c);
+                    NDArray d = new NDArray();
+                    NDArray v = new NDArray();
 
-                    Series t = _data[j];
-                    dynamic ct = _columns[j];
-                    dynamic it = _indexes[j];
-
-                    if (!_indexes.Contains(iz))
+                    for (int j = 0; j < iz.Length; j++)
                     {
-                        if (t.FindIndex(iz) != -1)
+                        int k = _columns.FindIndex(c);
+
+                        Series t = _data[k];
+
+                        dynamic l = iz[j];
+
+                        if (t.FindIndex(l) == -1)
                         {
-                            d.Add(t);
+                            d.Add(z[j]);
+                            v.Add(l);
                         }
-
-                        inx.Add(iz);
                     }
-                }
 
-                if (d.Length > 0)
-                {
-                    data.Add(d);
+                    if (d.Length > 0)
+                    {
+                        data.Add(d);
+                        cols.Add(c);
+                        inx = inx.Append(v);
+                    }
                 }
             }
 

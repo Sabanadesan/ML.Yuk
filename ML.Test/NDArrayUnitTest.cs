@@ -613,6 +613,34 @@ namespace ML.Test
         }
 
         [Fact]
+        public void TestAppend1()
+        {
+            NDArray r1 = new NDArray(0, 1, 2);
+            NDArray r2 = new NDArray(3, 4, 5);
+
+            NDArray r3 = r1.Append(r2);
+
+            NDArray r4 = new NDArray(0, 1, 2, 3, 4, 5);
+
+
+            Assert.True(r3.Equals(r4), "Arrays are not equal.");
+        }
+
+        [Fact]
+        public void TestAppend2()
+        {
+            NDArray r1 = new NDArray(0, 1, 2);
+            NDArray r2 = new NDArray(1, 0, 5);
+
+            NDArray r3 = r1.Append(r2);
+
+            NDArray r4 = new NDArray(0, 1, 2, 5);
+
+
+            Assert.True(r3.Equals(r4), "Arrays are not equal.");
+        }
+
+        [Fact]
         public void TestMin()
         {
             NDArray nd = new NDArray(null, 8, 2, -10, 4, -6);

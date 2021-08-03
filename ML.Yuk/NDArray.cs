@@ -387,6 +387,21 @@ namespace ML.Yuk
             _array = a;
         }
 
+        public NDArray Append(NDArray items)
+        {
+            NDArray array = Copy();
+
+            foreach(dynamic i in items)
+            {
+                if (!Contains(i))
+                {
+                    array.Add(i);
+                }
+            }
+
+            return array;
+        }
+
         // To Do: Deep Copy
         public NDArray Copy()
         {
@@ -595,9 +610,19 @@ namespace ML.Yuk
 
             foreach(dynamic t in _array)
             {
-                if (t == value)
+                if (t.GetType() == typeof(string) || t is ValueType)
                 {
-                    valid = true;
+                    if (t.GetType() == value.GetType())
+                    {
+                        if (t == value)
+                        {
+                            valid = true;
+                        }
+                    }
+                }
+                else if (t is not ValueType && value is not ValueType)
+                {
+                    valid = t.equals(value);
                 }
             }
 
